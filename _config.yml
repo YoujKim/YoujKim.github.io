@@ -29,6 +29,9 @@ github_username:  YoujKim
 author: Youjeong Kim
 avatar: /logo.png
 skin: daylight
+lang: ko
+
+paginate: 10
 
 # Build settings
 theme: minima
