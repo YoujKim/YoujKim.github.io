@@ -2,6 +2,7 @@
 layout: post
 title: Task Item List
 tags: [to-do list]
+categories: base
 ---
 
 This post tests the style of a task item list.
