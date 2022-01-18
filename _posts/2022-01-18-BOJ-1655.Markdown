@@ -1,0 +1,62 @@
+---
+layout: post
+title: "BOJ 1655 가운데로 말해요"
+categories: BOJ
+tag: [BOJ, Priority Queue, Heap, Buffered Reader, String Builder]
+---
+문제 링크: https://www.acmicpc.net/problem/1655
+
+문제 설명: 정수를 연속적으로 입력할때마다 지금까지 입력된 정수들 중에서 중간값을 출력하는 프로그램을 작성한다. 숫자의 개수가 짝수개인 경우 중간의 두 수 중 작은 수를 출력한다.
+
+풀이 방법:
+
+이 문제를 가장 효율적으로 푸는 방법은 우선순위 큐 (Priority Queue)를 이용하면 된다. 
+
+우선순위 큐는 특정한 우선순위 기준에 따라 우선순위가 가장 높은 값을 뺄 수 있는 자료구조로, 힙(Heap)을 이용하여 효율적으로 구현 가능하다.
+
+입력된 숫자를 정렬했다고 했을 때 1번부터 가운데까지는 최대 힙 (Max Heap; 부모 노드가 자식 노드보다 큰 경우)으로 저장하고
+
+가운데 이후부터 마지막까지는 최소 힙 (Min Heap: 부모 노드가 자식노드보다 작은 경우)으로 저장한다.
+
+즉, 숫자의 개수가 짝수인 경우에는 최대 힙과 최소 힙 안의 숫자 개수가 똑같고, 숫자의 개수가 홀수인 경우는 최대 힙 안의 숫자 개수가 최소 힙 안의 숫자 개수보다 1개 크다. 그리고 정답이 되는 가운데 숫자는 최대 힙의 루트 (즉, 우선순위가 가장 높은 값, 가장 큰 값)가 된다.
+
+Java로 구현하는 경우 PriorityQueue를 import하면 되는데, default가 minheap이므로 최대 힙은 reverseOrder로 만든다.
+
+또 시간 제한에 맞추기 위해 Scanner보다 훨씬 빠른 BufferedReader와 빠른 입력을 위한 String Builder를 사용하였다.
+
+개인적으로 우선순위 큐를 활용한 알고리즘 구상은 어렵지 않았으나 입출력의 속도가 문제가 되어서 고민을 많이 했었다. Java의 입출력 속도 개선에 대해 고민해보게 되어서 좋았다.
+
+코드
+
+<pre>
+<code>import java.util.Comparator;
+import java.util.PriorityQueue;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException; 
+
+class Main{
+    public static void main(String [] args) throws IOException {
+    	PriorityQueue<Integer> minheap = new PriorityQueue<>();
+    	PriorityQueue<Integer> maxheap = new PriorityQueue<>(Comparator.reverseOrder());
+    	BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+    	int N = Integer.parseInt(bf.readLine());
+    	StringBuilder sb = new StringBuilder();
+    	
+    	for (int i=0;i<N;i++) {
+    		int n = Integer.parseInt(bf.readLine());
+    		if (maxheap.size() == minheap.size()) {
+    			maxheap.add(n);
+    		}
+    		else {
+    			minheap.add(n);
+    		}
+    		if (i>0 && maxheap.peek()>minheap.peek()) {
+    			minheap.add(maxheap.poll());
+    			maxheap.add(minheap.poll());
+    		}
+    		sb.append(maxheap.peek()+"\n");
+    	}
+    	System.out.println(sb); 
+    }    
+  }
